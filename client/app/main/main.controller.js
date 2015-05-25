@@ -5,6 +5,8 @@ angular.module('budgetsApp')
 
         $scope.isAdmin = Auth.isAdmin;
         $scope.getCurrentUser = Auth.getCurrentUser;
+        $scope.isLoggedIn = Auth.isLoggedIn;
+        $scope.getCurrentUser = Auth.getCurrentUser;
 
         var growlconfig = {};
 

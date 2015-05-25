@@ -1,7 +1,7 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
 
-<div class="container" style="width:95%" ng-hide="isLoggedIn()">
-    <div class="row">
+<div class="container" style="width:95%">
+    <div class="row" ng-show="isAdmin()">
         <button class="btn btn-primary btn-lg"  ng-click="createBudget()" translate>
             <span class="glyphicon glyphicon-flash"></span> New Budget
         </button>
