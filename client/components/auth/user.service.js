@@ -12,6 +12,9 @@ angular.module('budgetsApp')
           controller:'password'
         }
       },
+      updateUser: {
+        method: 'PUT'
+      },
       get: {
         method: 'GET',
         params: {

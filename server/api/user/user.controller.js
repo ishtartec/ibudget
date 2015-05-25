@@ -93,9 +93,51 @@ exports.me = function(req, res, next) {
   });
 };
 
+// Updates an existing user in the DB.
+exports.update = function(req, res) {
+  if(req.body._id) { delete req.body._id; }
+  User.findById(req.params.id, function (err, user) {
+    if (err) { return handleError(err); }
+    if(!user) { return res.send(404); }
+    //var updated = _.merge(curso, req.body);
+    var updated = MergeRecursive(user, req.body);
+    console.log('user: ' + updated);
+    updated.save(function (err) {
+      if (err) { return validationError(res, err); }
+      return res.json(200, user);
+    });
+  });
+};
+
 /**
  * Authentication callback
  */
 exports.authCallback = function(req, res, next) {
   res.redirect('/');
 };
+
+/*
+ * Recursively merge properties of two objects
+ */
+function MergeRecursive(obj1, obj2) {
+
+    for (var p in obj2) {
+        try {
+            // Property in destination object set; update its value.
+            if ( obj2[p].constructor==Object ) {
+                obj1[p] = MergeRecursive(obj1[p], obj2[p]);
+
+            } else {
+                obj1[p] = obj2[p];
+
+            }
+
+        } catch(e) {
+            // Property in destination object not set; create it and set its value.
+            obj1[p] = obj2[p];
+
+        }
+    }
+
+    return obj1;
+}

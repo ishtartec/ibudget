@@ -137,6 +137,15 @@ angular.module('budgetsApp')
       },
 
       /**
+       * Check if a user is an admin
+       *
+       * @return {Boolean}
+       */
+      isUser: function() {
+        return currentUser.role === 'user';
+      },
+
+      /**
        * Get auth token
        */
       getToken: function() {

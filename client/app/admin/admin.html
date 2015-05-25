@@ -1,12 +1,78 @@
 <div ng-include="'components/navbar/navbar.html'"></div>
+<div class="container animated fadeIn">
+    <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
+    <div class="row">
+        <button class="btn btn-primary btn-lg"  ng-click="createUser()">
+            <span class="glyphicon glyphicon-flash"></span> Add new User
+        </button>
+    </div>
+    <hr/>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="user in users">
+            <strong>{{user.name}}</strong><br>
+            <span class="text-muted">{{user.email}}</span>
+            <a ng-click="deleteUser(user._id)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
+            <a ng-click="editUser(user._id)" class="edit"><span class="glyphicon glyphicon-edit pull-right"></span></a>
+        </li>
+    </ul>
 
-<div class="container">
-  <p>The delete user and user index api routes are restricted to users with the 'admin' role.</p>
-  <ul class="list-group">
-    <li class="list-group-item" ng-repeat="user in users">
-        <strong>{{user.name}}</strong><br>
-        <span class="text-muted">{{user.email}}</span>
-        <a ng-click="delete(user)" class="trash"><span class="glyphicon glyphicon-trash pull-right"></span></a>
-    </li>
-  </ul>
+    <!-- Modal -->
+    <script type="text/ng-template" id="user-save.html">
+        <div class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <form novalidate class="ng-scope ng-invalid ng-invalid-required ng-dirty">
+                        <div class="modal-header">
+                            <button type="button" class="close" ng-click="cancelUser()">&times;</button>
+                            <h4 class="modal-title" id="myModalLabel">Add/Edit User</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" class="form-control" ng-model="temp.name" placeholder="Enter user Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" ng-model="temp.email" placeholder="Enter user Email" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Password</label>
+                                <input type="password" class="form-control" ng-model="temp.password" required ng-disabled="remoteProvider(temp.provider)">
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userRole" id="admin" value="admin" ng-model="temp.role">
+                                    Admin
+                                </label>
+                            </div>
+                            <div class="radio">
+                                <label>
+                                    <input type="radio" name="userRole" id="user" value="user" ng-model="temp.role">
+                                    User
+                                </label>
+                            </div>
+                            <div class="radio disabled">
+                                <label>
+                                    <input type="radio" name="userRole" id="guest" value="guest" checked ng-model="temp.role">
+                                    Guest
+                                </label>
+                            </div>
+                            <div class="form-group has-error">
+                                <p class="help-block" ng-show="form.email.$error.required && form.password.$error.required && submitted">
+                                    Please enter email and password.
+                                </p>
+                                <p class="help-block">{{ errors.other }}</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-primary" ng-click="saveUser(user.id)">OK</button>
+                            <button class="btn btn-warning" ng-click="cancelUser()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </script>
 </div>
+
+
