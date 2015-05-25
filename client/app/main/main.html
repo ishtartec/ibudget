@@ -1,0 +1,178 @@
+<div ng-include="'components/navbar/navbar.html'"></div>
+
+<div class="container" style="width:95%" ng-hide="isLoggedIn()">
+    <div class="row">
+        <button class="btn btn-primary btn-lg"  ng-click="createBudget()" translate>
+            <span class="glyphicon glyphicon-flash"></span> New Budget
+        </button>
+        <hr>
+        <div class="panel panel-dark">
+            <div class="panel-heading"><strong translate><span class="glyphicon glyphicon-th"></span> Budgets</strong></div>
+            <div class="panel-body">
+
+                <table class="table table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th translate>Name</th>
+                        <th translate>Created By</th>
+                        <th translate>Date</th>
+                        <th translate>Customer</th>
+                        <th translate>Total</th>
+                        <th translate>BvsI</th>
+                        <th translate>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="budget in budgets track by budget._id">
+                        <td>{{budget.name}}</td>
+                        <td>{{budget.createdBy}}</td>
+                        <td>{{budget.date | date:'medium'}}</td>
+                        <td>{{budget.customer }}</td>
+                        <td>{{budget.total | currency: "€"}}</td>
+                        <td>{{budget.bi | number:2}} %</td>
+                        <td>
+                            <div class="btn-group btn-xs">
+                                <button type="button" class="btn btn-default btn-xs" ng-click="editBudget(budget._id)"
+                                        ><span class="glyphicon glyphicon-pencil"></span></button>
+                                <button type="button" class="btn btn-danger btn-xs" ng-click="deleteBudget(budget._id)"
+                                        ><span class="glyphicon glyphicon-trash"></span></button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-include="'components/navbar/footer.html'"></div>
+
+<!-- Modal -->
+<script type="text/ng-template" id="newTemplate.html">
+    <div class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form novalidate class="ng-scope ng-invalid ng-invalid-required ng-dirty">
+                    <div class="modal-header">
+                        <button type="button" class="close" ng-click="cancelBudget()">&times;</button>
+                        <h4 class="modal-title" id="myModalLabel" translate>Budget Management</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="temp.name" placeholder="Budget Name" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="temp.customer" placeholder="Customer" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Instructor</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.instructorFee" ng-change="updateBudget()" placeholder="Fee" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.instructorHours" ng-change="updateBudget()" placeholder="Hours" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.instructorTotal" placeholder="Total" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Vendor</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.vendorFee" ng-change="updateBudget()" placeholder="Fee" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.vendorCount" ng-change="updateBudget()" placeholder="Count" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.vendorTotal" placeholder="Total" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Manuals</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.manualsFee" ng-change="updateBudget()" placeholder="Fee" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.manualsCount" ng-change="updateBudget()" placeholder="Count" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.manualsTotal" placeholder="Total" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Expenses</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.expensesFee" ng-change="updateBudget()" placeholder="Fee" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.expensesCount" ng-change="updateBudget()" placeholder="Count" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.expensesTotal" placeholder="Total" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Travel</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.travelCost" ng-change="updateBudget()" placeholder="Fee" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.travelCount" ng-change="updateBudget()" placeholder="Count" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-model="temp.travelTotal" placeholder="Total" disabled>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label">Date</label>
+                                <div class="col-md-6">
+                                    <input type="text" size="10" class="form-control" ng-model="temp.date" data-autoclose="1" placeholder="Date" bs-datepicker>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-offset-4 col-md-5 control-label">Indirect Cost (20%)</label>
+                                <div class="col-md-3">
+                                    {{temp.ic | currency:"€"}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-offset-4 col-md-5 control-label">Direct Cost</label>
+                                <div class="col-md-3">
+                                    {{temp.dc | currency:"€"}}
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-offset-4 col-md-5 control-label">Benefit vs Income</label>
+                                <div class="col-md-3">
+                                    {{temp.bi | number:2}} %
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-offset-4 col-md-5 control-label">Total</label>
+                                <div class="col-md-3">
+                                    <input type="number" class="form-control" ng-change="updateBudget()" ng-model="temp.total"
+                                           step='0.01' placeholder="Total">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label translate>Content</label>
+                            <text-angular ng-model="temp.comments"></text-angular>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-success" ng-click="calculateBudget()">Calculate</button>
+                        <button class="btn btn-primary" ng-click="saveBudget()">OK</button>
+                        <button class="btn btn-warning" ng-click="cancelBudget()">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</script>
